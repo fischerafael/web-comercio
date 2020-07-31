@@ -1,0 +1,224 @@
+$standardSpace: 16px;
+$fontStyle: $standardSpace sans-serif;
+$maxWidth: 1200px;
+
+$primaryColor: #6183DD;
+$secondaryColor: #333333;
+$tertiaryColor: #ffffff;
+$lightGrey: #e7e7e7;
+$shadow: 0 0 10px rgba(51, 51, 51, 0.2);
+$backDrop: rgba(0, 0, 0, 0.2);
+
+* {
+    margin: 0;
+    padding: 0;
+    outline: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font: $fontStyle; 
+    color: $secondaryColor;   
+}
+
+button {
+    font: $fontStyle;
+    padding: $standardSpace;
+    background: $primaryColor;
+    border: none;
+    color: $tertiaryColor; 
+    cursor: pointer;   
+    
+    width: 100%;
+
+    &:hover {
+        background: $tertiaryColor;
+        color: $primaryColor;
+    }
+}
+
+input {
+    font: $fontStyle;
+    padding: $standardSpace;
+    background: $lightGrey;
+    border: none;
+    font-size: $standardSpace;
+}
+
+nav {
+    height: 10vh; 
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .nav-container {
+        max-width: $maxWidth;
+        width: 100%;
+        height: 100%;
+        
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        
+        img {
+            height: 50px;
+        }
+
+        button {
+            max-width: 150px;
+        }
+    }
+}
+
+.input-section {
+    height: 40vh;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    form {
+        max-width: $maxWidth;
+        width: 100%;
+        height: 100%;
+        
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+
+        h1 {
+            font-size: 2*$standardSpace;
+            margin: $standardSpace;
+            
+        }
+
+        .form-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: $standardSpace;
+            width: 100%;            
+        }
+
+        .product-inputs {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            grid-gap: $standardSpace;
+            width: 100%;            
+        }
+    }
+}
+
+.products-section {
+    min-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;    
+
+    .products-container {
+        max-width: $maxWidth;
+        width: 100%;
+        height: 100%;
+
+        display: grid;
+        grid-gap: $standardSpace;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+
+        .card {
+            padding: $standardSpace;
+            box-shadow: $shadow;
+
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center; 
+            position: relative;
+
+            button {
+                position: absolute;
+                bottom: 0;
+            }
+
+            h2 {
+                font-size: 1.5*$standardSpace;
+                margin-bottom: $standardSpace;
+            }
+
+            h1 {
+                font-size: 3*$standardSpace;
+            }
+
+            .card-info {                
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                grid-gap: $standardSpace;
+                margin-top: 2*$standardSpace;
+
+                .card-info-detail:last-child {
+                    text-align: right;
+                }
+            }
+        }
+    }
+}
+
+.backdrop {
+    width: 100vw;
+    height: 100vh;
+    background: $backDrop;    
+
+    position: fixed;
+    right: 0;
+    top: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .close-modal-btn {
+        position: fixed;
+        bottom: 0;
+    }
+
+    .modal {        
+        background: $tertiaryColor;
+        max-width: 600px;
+        width: 100%;
+        min-height: 50vh;
+        padding: 3*$standardSpace;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        h1 {
+            margin-bottom: $standardSpace;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+
+            input {
+                margin: $standardSpace 0;
+            }
+
+            button {
+                margin: $standardSpace 0;
+            }
+
+            a {
+                text-decoration: none;
+                color: $secondaryColor;
+
+                a:hover {
+                    color: $primaryColor;
+                }
+            }
+        }
+    }
+}
