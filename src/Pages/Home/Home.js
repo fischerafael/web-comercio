@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react'
+import ReactMapGL, { Marker, Popup } from 'react-map-gl'
+
 import api from '../../Services/Api'
 
 import Navbar from '../../Components/Navbar/Navbar'
 import Card from '../../Components/Card/Card'
 import Modal from '../../Components/Modal/Modal'
+import CardMarker from '../../Components/CardMarker/CardMarker'
 
 function Home() {
     const [isModalOpen, setModalOpen] = useState(false)
@@ -18,6 +21,20 @@ function Home() {
 
     const [filteredProductsData, setFilteredProductsData] = useState([])
 
+    const [viewport, setViewport] = useState({
+        latitude: 0,
+        longitude: 0,
+        width: "100vw",
+        height: "45vh",
+        zoom: 15
+    })
+
+    const [selectedProduct, setSelectedProduct] = useState(null)
+
+    const [isList, setIslist] = useState(true)
+
+    const mapboxApiToken = "pk.eyJ1IjoiZGVzaWduZmlzY2hlciIsImEiOiJja2RldnlqMmwwYXUyMzBwZnlrYmhwYjA5In0.qYk2QofNKKecizVF99V8ew"
+
     useEffect(() => {
         getUserLocation()
     }, [])
@@ -27,6 +44,7 @@ function Home() {
             const { latitude, longitude } = position.coords
             setLatitude(latitude)
             setLongitude(longitude)
+            setViewport({...viewport, latitude, longitude})
         }, (err) => {
             console.log(err)
         }, { timeout: 10000 })
@@ -40,6 +58,7 @@ function Home() {
         try {
             const nearByProducts = await api.get(`/product?latitude=${latitude}&longitude=${longitude}`)
             const { data } = nearByProducts
+            console.log(data)
             setProductsData(data)
         } catch(err) {
             alert('Erro ao carregar produtos')
@@ -66,6 +85,16 @@ function Home() {
         setModalOpen(false)
     }
 
+    function loadList(e) {
+        e.preventDefault()
+        setIslist(true)
+    }
+
+    function loadMap(e) {
+        e.preventDefault()
+        setIslist(false)
+    }
+
     return (
         <>
             <Navbar openModal={openModal} />
@@ -86,25 +115,76 @@ function Home() {
                             value={productsByMaxPrice}
                             onChange={e => setProducsByMaxPrice(e.target.value)}
                         />
-                    </div>                    
+                    </div>
+                    {isList ? <button onClick={loadMap}>Ver mapa</button> : <button onClick={loadList}>Ver lista</button>}                                        
                 </form>
             </section>
-            <section className="products-section">
-                <div className="products-container">
-                    {productsData.length > 0 ? 
-                    (filteredProductsData.map(product => (
-                        <Card key={product._id}
-                            name={product.name}
-                            price={product.price}
-                            userName={product.user.name}
-                            userWhats={product.user.whatsapp}                        
-                        />
-                    ))) : 
-                        <h1>Carregando...</h1>
-                    }                                                                      
-                </div>                
-            </section>
 
+            {isList ?
+                (<section className="products-section">
+                    <div className="products-container">
+                        {productsData.length > 0 ? 
+                        (filteredProductsData.map(product => (
+                            <Card key={product._id}
+                                name={product.name}
+                                price={product.price}
+                                userName={product.user.name}
+                                userWhats={product.user.whatsapp}                        
+                            />
+                        ))) : 
+                            <h1>Carregando...</h1>
+                        }                                                                      
+                    </div>                
+                </section>) :
+                (<section className="products-map-section">
+                <ReactMapGL 
+                    {...viewport}
+                    mapboxApiAccessToken={mapboxApiToken}
+                    onViewportChange={viewport => {
+                        setViewport(viewport)
+                    }}
+                >
+                    {filteredProductsData.map(product => (
+                        <Marker
+                            key={product._id}
+                            latitude={product.location.coordinates[1]}
+                            longitude={product.location.coordinates[0]}
+                        >
+                            <div className="marker">
+                                <button 
+                                    className="marker-btn"
+                                    onClick={e => {
+                                        e.preventDefault()
+                                        setSelectedProduct(product)
+                                    }}
+                                >
+                                   <h1>{product.name}</h1> 
+                                </button>
+                            </div>
+                        </Marker>
+                    ))}  
+
+                    {selectedProduct ? (
+                        <Popup
+                            latitude={selectedProduct.location.coordinates[1]}
+                            longitude={selectedProduct.location.coordinates[0]}
+                            onClose={() => {
+                                setSelectedProduct(null)
+                            }}
+                        >
+                            <CardMarker 
+                                name={selectedProduct.name}
+                                price={selectedProduct.price}
+                                userName={selectedProduct.user.name}
+                                userWhats={selectedProduct.user.whatsapp}                        
+                            />
+                        </Popup>
+                    )
+                        : null
+                    }
+                </ReactMapGL>
+            </section>)
+            }          
             {isModalOpen ? <Modal closeModal={closeModal} /> : null}            
         </>
     )

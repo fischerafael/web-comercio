@@ -37,6 +37,56 @@ button {
     }
 }
 
+.marker-btn {               
+    padding: $standardSpace;
+    border-style: solid;
+    border-color: $primaryColor;
+    border-radius: $standardSpace;
+    background: $tertiaryColor;
+    color: $primaryColor;
+
+    font-size: 0.5*$standardSpace;
+
+    &:hover {
+        background: $primaryColor;
+        color: $tertiaryColor;
+    }
+}
+
+.card-marker {
+    padding: 2*$standardSpace;
+
+    display: flex;
+    flex-direction: column;    
+
+    justify-content: center;
+    align-items: center; 
+    position: relative;
+
+    width: 100%;
+    min-width: 300px;
+
+    h2 {
+        font-size: 1*$standardSpace;
+        margin-bottom: 0.5*$standardSpace;
+    }
+
+    h1 {
+        margin-bottom: $standardSpace;
+    }
+
+    .card-info {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: $standardSpace;
+        margin-top: $standardSpace;
+
+        background: $primaryColor;
+        padding: $standardSpace;
+        color: $tertiaryColor
+    }
+}
+
 input {
     font: $fontStyle;
     padding: $standardSpace;
@@ -106,6 +156,11 @@ nav {
             grid-template-columns: 2fr 1fr 1fr;
             grid-gap: $standardSpace;
             width: 100%;            
+        }
+
+        button {
+            max-width: 300px;
+            margin-top: 3*$standardSpace;
         }
     }
 }
