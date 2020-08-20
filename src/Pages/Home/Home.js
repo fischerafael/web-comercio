@@ -8,6 +8,8 @@ import Card from '../../Components/Card/Card'
 import Modal from '../../Components/Modal/Modal'
 import CardMarker from '../../Components/CardMarker/CardMarker'
 
+import HeroImg from '../../assets/hero-img.svg'
+
 function Home() {
     const [isModalOpen, setModalOpen] = useState(false)
 
@@ -25,7 +27,7 @@ function Home() {
         latitude: 0,
         longitude: 0,
         width: "100vw",
-        height: "45vh",
+        height: "60vh",
         zoom: 15
     })
 
@@ -36,46 +38,43 @@ function Home() {
     const mapboxApiToken = "pk.eyJ1IjoiZGVzaWduZmlzY2hlciIsImEiOiJja2RldnlqMmwwYXUyMzBwZnlrYmhwYjA5In0.qYk2QofNKKecizVF99V8ew"
 
     useEffect(() => {
+        async function getUserLocation() {
+            navigator.geolocation.getCurrentPosition((position) => {
+                const { latitude, longitude } = position.coords
+                setLatitude(latitude)
+                setLongitude(longitude)
+                setViewport({...viewport, latitude, longitude})
+            }, (err) => {
+                console.log(err)
+            }, { timeout: 10000 })
+        }
         getUserLocation()
-    }, [])
-
-    async function getUserLocation() {
-        navigator.geolocation.getCurrentPosition((position) => {
-            const { latitude, longitude } = position.coords
-            setLatitude(latitude)
-            setLongitude(longitude)
-            setViewport({...viewport, latitude, longitude})
-        }, (err) => {
-            console.log(err)
-        }, { timeout: 10000 })
-    }
+    }, [viewport])
 
     useEffect(() => {
+        async function getNearByProducts() {
+            try {
+                const nearByProducts = await api.get(`/product?latitude=${latitude}&longitude=${longitude}`)
+                const { data } = nearByProducts
+                console.log(data)
+                setProductsData(data)
+            } catch(err) {
+                alert('Erro ao carregar produtos')
+            }
+        }
         getNearByProducts()
     }, [latitude, longitude])
 
-    async function getNearByProducts() {
-        try {
-            const nearByProducts = await api.get(`/product?latitude=${latitude}&longitude=${longitude}`)
-            const { data } = nearByProducts
-            console.log(data)
-            setProductsData(data)
-        } catch(err) {
-            alert('Erro ao carregar produtos')
-        }
-    }
-
     useEffect(() => {
+        function getFilteredProducts() {        
+            const filteredProducts = productsData.filter(product =>
+                (!productsByName || product.name.toLowerCase().includes(productsByName.toLowerCase())) &&
+                (!productsByMaxPrice || product.price <= productsByMaxPrice)     
+            )
+            setFilteredProductsData(filteredProducts)
+        }
         getFilteredProducts()
-    }, [productsData, productsByName, productsByMaxPrice])
-
-    function getFilteredProducts() {        
-        const filteredProducts = productsData.filter(product =>
-            (!productsByName || product.name.toLowerCase().includes(productsByName.toLowerCase())) &&
-            (!productsByMaxPrice || product.price <= productsByMaxPrice)     
-        )
-        setFilteredProductsData(filteredProducts)
-    }
+    }, [productsData, productsByName, productsByMaxPrice])    
 
     function openModal() {
         setModalOpen(true)
@@ -98,25 +97,53 @@ function Home() {
     return (
         <>
             <Navbar openModal={openModal} />
+            <section className="hero-section">
+                <div className="hero-content">
+                    <img src={HeroImg} alt="Imagem de capa"/>
+                    <div className="hero-text">
+                        <h1>Compre e venda para seus vizinhos sem ter que sair de casa</h1>
+                        <h2>
+                            O Comércio Local é uma aplicação que conecta pequenos comércios com seus vizinhos.
+                        </h2>
+                        <h2>
+                            Desta forma, não é necessário sair de casa para encontrar produtos vendidos na redondeza.
+                        </h2>
+                    </div>                    
+                </div>
+            </section>
+
             <section className="input-section">
                 <form>
-                    <h1>Pesquisar produtos</h1>                    
+                    <h1>Comprar produtos</h1>                                      
                     <div className="form-inputs">
-                        <input 
-                            type="text" 
-                            placeholder="pesquisar por nome"
-                            value={productsByName}
-                            onChange={e => setProductsByName(e.target.value)}
-                        />
-                        <input 
-                            type="number" 
-                            min="0" 
-                            placeholder="preço máximo"
-                            value={productsByMaxPrice}
-                            onChange={e => setProducsByMaxPrice(e.target.value)}
-                        />
-                    </div>
-                    {isList ? <button onClick={loadMap}>Ver mapa</button> : <button onClick={loadList}>Ver lista</button>}                                        
+                        <div className="input-product">
+                            <label htmlFor="product-by-name">
+                                Nome do Produto
+                            </label>
+                            <input 
+                                id="product-by-name"
+                                type="text" 
+                                placeholder="pesquisar por nome"
+                                value={productsByName}
+                                onChange={e => setProductsByName(e.target.value)}
+                            />
+                        </div> 
+                        <div className="input-product">
+                            <label htmlFor="product-by-price">
+                                Preço máximo (em R$)
+                            </label>
+                            <input 
+                            
+                                id="product-by-price"
+                                type="number" 
+                                min="0" 
+                                placeholder="preço máximo"
+                                value={productsByMaxPrice}
+                                onChange={e => setProducsByMaxPrice(e.target.value)}
+                            />                            
+                        </div>   
+                        {isList ? <button onClick={loadMap}>Ver mapa</button> : <button onClick={loadList}>Ver lista</button>}                     
+                    </div>                                                            
                 </form>
             </section>
 

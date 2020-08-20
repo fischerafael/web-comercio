@@ -93,6 +93,7 @@ input {
     background: $lightGrey;
     border: none;
     font-size: $standardSpace;
+    height: $standardSpace*3;
 }
 
 nav {
@@ -121,12 +122,53 @@ nav {
     }
 }
 
-.input-section {
-    height: 40vh;
-    
+.hero-section {
+    height: 60vh;
+
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    .hero-content {
+        max-width: $maxWidth;
+        width: 100%;
+        height: 100%;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        img {
+            max-width: ($maxWidth/2)*0.8;
+        }
+
+        .hero-text {
+            display: flex;
+            flex-direction: column;
+            max-width: $maxWidth/2;            
+        }
+
+        h1 {
+            font-size: $standardSpace*3;
+            margin: $standardSpace*2 0;
+            line-height: $standardSpace*3;
+        }
+
+        h2 {
+            font-size: $standardSpace*1;
+            margin-bottom: $standardSpace;
+        }
+    }
+}
+
+.input-section {
+    height: 30vh;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;  
+    
+    margin-bottom: $standardSpace*3;
 
     form {
         max-width: $maxWidth;
@@ -136,31 +178,64 @@ nav {
         display: flex;
         align-items: center;
         justify-content: center;
-        flex-direction: column;
+        flex-direction: column;  
+        
+        box-shadow: $shadow;
+        padding: $standardSpace*5;
+        
+        background: $primaryColor;
 
         h1 {
             font-size: 2*$standardSpace;
             margin: $standardSpace;
-            
+            color: white;            
         }
 
         .form-inputs {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 3fr 3fr 1fr;
             grid-gap: $standardSpace;
-            width: 100%;            
+            width: 100%;   
+            margin-bottom: $standardSpace*2;  
+            
+            .input-product {
+                display: flex;
+                flex-direction: column;
+
+                label {
+                    font-size: $standardSpace;  
+                    height: $standardSpace*1.5;  
+                    color: white;                
+                }
+            }
         }
 
         .product-inputs {
             display: grid;
             grid-template-columns: 2fr 1fr 1fr;
             grid-gap: $standardSpace;
-            width: 100%;            
+            width: 100%;   
+            margin-top: $standardSpace*2;    
+            
+            .input {
+                display: flex;
+                flex-direction: column;
+
+                label {
+                    font-size: $standardSpace;  
+                    height: $standardSpace*1.5; 
+                    color: white;                 
+                }
+            }
         }
 
         button {
-            max-width: 300px;
-            margin-top: 3*$standardSpace;
+            max-width: 300px;   
+            margin-top: $standardSpace*1.5;         
+        }
+
+        .btn-add-product {
+            margin-top: $standardSpace*1.5;
         }
     }
 }
@@ -215,6 +290,31 @@ nav {
                     text-align: right;
                 }
             }
+        }
+
+        img {
+            max-width: $maxWidth/4;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .null-product-warnning {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+            min-height: 300px;            
+
+                h1 {
+                    font-size: $standardSpace*1.5;
+                    margin-bottom: $standardSpace;
+                }
+
+                h2 {
+                    font-size: $standardSpace*.75;
+                }
         }
     }
 }

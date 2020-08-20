@@ -7,7 +7,7 @@ import Home from '../Pages/Home/Home'
 import Dashboard from '../Pages/Dashboard/Dashboard'
 
 function Routes() {
-    const [userData, setUserData] = useContext(UserContext)    
+    const [userData] = useContext(UserContext)    
 
     return (
         <BrowserRouter>

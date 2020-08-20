@@ -7,6 +7,8 @@ import { UserContext } from '../../Context/UserContext'
 function LoginModal({ setRegisterForm }) {
     const [userData, setUserData] = useContext(UserContext)
 
+    console.log(userData)
+
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 

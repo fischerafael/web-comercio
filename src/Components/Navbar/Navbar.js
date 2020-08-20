@@ -28,7 +28,7 @@ function Navbar({ openModal }) {
                     <p>Olá, {userData.name}</p>
                     <button onClick={logoutHandler}>SAIR</button>
                     </> : 
-                    <button onClick={openModal}>ENTRAR</button>}                
+                    <button onClick={openModal}>VENDER</button>}                
             </div>
         </nav>
     )
